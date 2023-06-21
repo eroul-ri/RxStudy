@@ -1,4 +1,4 @@
-package hr.rx.demo.observable;
+package hr.rx.demo.hot;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;

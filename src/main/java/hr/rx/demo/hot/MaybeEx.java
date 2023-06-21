@@ -1,4 +1,4 @@
-package hr.rx.demo.maybe;
+package hr.rx.demo.hot;
 
 import io.reactivex.rxjava3.core.Maybe;
 
@@ -23,7 +23,7 @@ public class MaybeEx {
      */
     public Maybe<String> createMaybe() {
         return Maybe.create((maybeEmitter) -> {
-            maybeEmitter.onSuccess("First onSuccess");
+            maybeEmitter.onSuccess("First onSuccess"); // 하나만 발행되고 종료됨.
             maybeEmitter.onSuccess("Second onSuccess");
             maybeEmitter.onComplete();
         });
