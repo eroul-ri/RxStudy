@@ -11,30 +11,30 @@ import java.util.List;
  * - 단건의 데이터만 발행하는 Observable 형태
  * - 발행과 동시에 종료
  */
-public class SingleClass {
+public class SingleEx {
 
     public static void main(String[] args) {
-        SingleClass singleClass = new SingleClass();
+        SingleEx singleEx = new SingleEx();
 
-        Single<String> single = singleClass.singleJust();
+        Single<String> single = singleEx.singleJust();
 
         single.subscribe(System.out::println);
 
-        singleClass.fromObservable(
+        singleEx.fromObservable(
                 Observable.just("from Observable")
         ).subscribe(System.out::println);
 
         String [] colors = {"RED", "BLACK", "WHITE"};
 
-        singleClass.fromObservableArray(
+        singleEx.fromObservableArray(
                 Observable.fromArray(colors)
         ).subscribe(System.out::println);
 
-        singleClass.fromObservableArray(
+        singleEx.fromObservableArray(
                 Observable.empty()
         ).subscribe(System.out::println);
 
-        singleClass.fromEmptyObservable(
+        singleEx.fromEmptyObservable(
                 Observable.empty()
         ).subscribe(System.out::println);
 
@@ -43,7 +43,7 @@ public class SingleClass {
         orders.add(new Order("1"));
         orders.add(new Order("2"));
 
-        singleClass.takeSingle(
+        singleEx.takeSingle(
                 Observable.fromArray(orders.toArray(new Order[orders.size()]))
         ).subscribe(System.out::println);
     }
