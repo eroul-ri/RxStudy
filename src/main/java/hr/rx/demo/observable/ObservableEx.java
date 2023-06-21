@@ -2,6 +2,8 @@ package hr.rx.demo.observable;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -16,12 +18,14 @@ public class ObservableEx {
     public static void main(String[] args) {
         ObservableEx observableEx = new ObservableEx();
 
-        Observable<Integer> source = observableEx.fromArrayObservable();
+        Observable<Integer> source = observableEx.fromPublisherObservable();
 
         source.subscribe(System.out::println);
-
-        Callable<String> callable = () -> "Smile!";
-
+        /*
+        Callable<String> callable = () -> {
+            Thread.sleep(1000);
+            return "Smile!";
+        };
         Observable<String> sourceStr = observableEx.fromCallableObservable(callable);
 
         sourceStr.subscribe(System.out::println);
@@ -29,6 +33,7 @@ public class ObservableEx {
         Observable<String> futureSource = observableEx.fromFutureObservable(callable);
 
         futureSource.subscribe(System.out::println);
+         */
     }
 
     /**
@@ -49,7 +54,7 @@ public class ObservableEx {
      * Observable create function
      * 사용 후 구독을 반드시 해지(Dispose), 해지하지 않는 경우 memory leak 발생
      */
-    public Observable createObservable() {
+    public Observable<Integer> createObservable() {
         //
         return Observable.create(
                 (emitter)-> {
@@ -68,7 +73,7 @@ public class ObservableEx {
     /**
      * Observable fromArray function
      */
-    public Observable fromArrayObservable() {
+    public Observable<Integer> fromArrayObservable() {
         return Observable.fromArray(new Integer[]{100, 200});
     }
 
@@ -79,13 +84,30 @@ public class ObservableEx {
      * @param callable
      * @return
      */
-    public Observable fromCallableObservable(Callable<String> callable) {
+    public Observable<String> fromCallableObservable(Callable<String> callable) {
         return Observable.fromCallable(callable);
     }
 
-    public Observable fromFutureObservable(Callable<String> callable) {
+    /**
+     * Observable future
+     * - future의 작업이 끝날 때까지 스레드 블로킹
+     * @param callable
+     * @return
+     */
+    public Observable<String> fromFutureObservable(Callable<String> callable) {
         Future<String> future = Executors.newSingleThreadExecutor()
                                          .submit(callable);
+        // Observable.fromFuture(future, 1000, TimeUnit.MILLISECONDS);
         return Observable.fromFuture(future);
+    }
+
+    public Observable fromPublisherObservable() {
+        Publisher<Integer> publisher = (Subscriber<? super Integer> sub) -> {
+            sub.onNext(100);
+            sub.onNext(300);
+
+            sub.onComplete();
+        };
+        return Observable.fromPublisher(publisher);
     }
 }
